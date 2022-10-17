@@ -102,7 +102,7 @@ if (!class_exists('Webp')) {
             $type_authorized = array("image/jpg", "image/png", "image/jpeg", "image/gif");
 
 
-            $img_path = get_template_directory_uri() . $path;
+            $img_path = esc_url(get_template_directory_uri() . $path);
 
             // Vérification du MIME du fichier
             $img_type = mime_content_type(get_template_directory() . $path);

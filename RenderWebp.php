@@ -12,6 +12,7 @@
 
  */
 
+use RenderWebp as GlobalRenderWebp;
 
 defined('ABSPATH') || exit;
 
@@ -42,8 +43,38 @@ if (!class_exists('Webp')) {
         public function init(): RenderWebp
         {
             $this->plugin_url = plugin_dir_url(__FILE__);
+            add_shortcode('webp', array($this, 'shortcode_img'));
 
             return $this;
+        }
+
+        /**
+         * Shortcode to return an img
+         *
+         * @param [type] $atts
+         * @return void
+         */
+        public function shortcode_img($atts): void
+        {
+            $atts = shortcode_atts(
+                array(
+                    'path' => '',
+                    'loading' => '',
+                    'alt' => '',
+                    'title' => ''
+                ),
+                $atts,
+                'webp'
+            );
+
+            RenderWebp::img(
+                $atts['path'],
+                array(
+                    'alt' => $atts['alt'],
+                    'title' => $atts['title'],
+                    'loading' => $atts['loading']
+                )
+            );
         }
 
         /**
@@ -63,12 +94,13 @@ if (!class_exists('Webp')) {
 
             $title = isset($args['title']) ? $args['alt'] : '';
 
-            // Liste des extensions autrisées
-            $type_authorized = array("image/jpg", "image/png", "image/jpeg", "image/gif");
-
             if (mb_substr($path, 0, 1) != '/') {
                 $path = '/' . $path;
             }
+
+            // Liste des extensions autrisées
+            $type_authorized = array("image/jpg", "image/png", "image/jpeg", "image/gif");
+
 
             $img_path = get_template_directory_uri() . $path;
 
